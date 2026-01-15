@@ -10,48 +10,46 @@ export class NotesService {
     private readonly notesRepository: NotesRepositoryInterface,
   ) {}
 
-  /**
-   * Crea una nueva nota en el sistema de persistencia.
-   * @param createNoteDto Datos necesarios para crear la nota.
-   * @returns La nota creada con su ID y fechas.
-   */
   create(createNoteDto: CreateNoteDto) {
     return this.notesRepository.create(createNoteDto);
   }
 
   /**
-   * Obtiene el listado de todas las notas.
-   * @param sort Criterio de ordenamiento opcional.
-   * @returns Arreglo de notas.
+   * Obtiene las notas aplicando las reglas de negocio:
+   * 1. Ordenamiento (Título, Creación, Modificación).
+   * 2. Proyección (Ocultar el contenido).
    */
-  findAll(sort?: string) {
-    return this.notesRepository.findAll(sort);
+  async findAll(sort?: string) {
+    // 1. Traemos todas las notas del repositorio
+    const notes = await this.notesRepository.findAll();
+
+    // 2. Aplicamos lógica de ORDENAMIENTO si el usuario lo pidió
+    if (sort) {
+      if (sort === 'title') {
+        notes.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sort === 'creationDate') {
+        notes.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      } else if (sort === 'modificationDate') {
+        notes.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
+      }
+    }
+
+    // 3. Aplicamos lógica de NEGOCIO: Ocultar el campo 'content' en el listado
+    return notes.map((note) => {
+      // Usamos desestructuración para separar el contenido del resto
+      const { content, ...noteWithoutContent } = note as any;
+      return noteWithoutContent;
+    });
   }
 
-  /**
-   * Busca una nota específica por su identificador único.
-   * @param id Identificador UUID de la nota.
-   * @returns La nota encontrada.
-   */
   findOne(id: string) {
     return this.notesRepository.findById(id);
   }
 
-  /**
-   * Actualiza el título o contenido de una nota existente.
-   * @param id Identificador de la nota a modificar.
-   * @param updateNoteDto Datos a actualizar.
-   * @returns La nota actualizada.
-   */
   update(id: string, updateNoteDto: UpdateNoteDto) {
     return this.notesRepository.update(id, updateNoteDto);
   }
 
-  /**
-   * Elimina una nota del sistema.
-   * @param id Identificador de la nota a eliminar.
-   * @returns True si fue eliminada, False si no existía.
-   */
   remove(id: string) {
     return this.notesRepository.delete(id);
   }
