@@ -1,98 +1,82 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# UCAB Tasks API - Sistema de Gestión de Notas
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API RESTful desarrollada con **NestJS** para la gestión de notas (creación, lectura, actualización y eliminación). El proyecto implementa persistencia de datos mediante archivos (JSON), validaciones y lógica de negocio específica.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Características y Requisitos Cumplidos
 
-## Description
+### Funcionales
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **CRUD Completo:** Gestión total de notas (Título y Contenido).
+- **Persistencia en Archivo:** Los datos se almacenan físicamente en `data.json` y persisten ante reinicios del servidor.
+- **Seguridad en Listado:** El endpoint `GET /notes` devuelve el listado de notas **ocultando el campo `content`** por privacidad.
+- **Detalle Completo:** El endpoint `GET /notes/:id` permite ver la nota completa (incluyendo contenido).
+- **Ordenamiento:** Capacidad de ordenar el listado por Título, Fecha de Creación o Modificación (`?sort=title`).
+- **Generación de IDs:** Uso de UUIDs (v4) para identificadores únicos.
 
-## Project setup
+### No Funcionales
 
-```bash
-$ npm install
-```
+- **Arquitectura Modular:** Separación de responsabilidades (Controller, Service, Repository).
+- **Inyección de Dependencias:** Uso de Interfaces para desacoplar la lógica de negocio del almacenamiento.
+- **Pruebas Unitarias:** Cobertura de tests para Controladores y Servicios (`.spec.ts`).
+- **Documentación API:** Integración con Swagger/OpenAPI.
 
-## Compile and run the project
+## Instalación y Configuración
 
-```bash
-# development
-$ npm run start
+1. **Clonar el repositorio:**
 
-# watch mode
-$ npm run start:dev
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd ucab-tasks
 
-# production mode
-$ npm run start:prod
-```
+   ```
 
-## Run tests
+2. **Instalar Dependencias:**
+   npm install
 
-```bash
-# unit tests
-$ npm run test
+3. **Ejecucion:**
+   npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
+## Swagger (API)
 
-# test coverage
-$ npm run test:cov
-```
+1. Inicie el servidor.
 
-## Deployment
+2.Acceder a la pagina: http://localhost:3000/api
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+3. **Endpoints Principales**
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- POST,/notes,Crear una nueva nota,N/A
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+- GET,/notes,Listar notas (Sin contenido),?sort=title
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- GET,/notes/{id},Ver detalle de nota (Con contenido)
 
-## Resources
+- PATCH,/notes/{id},Actualizar título o contenido
 
-Check out a few resources that may come in handy when working with NestJS:
+- DELETE,/notes/{id},Eliminar una nota
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Pruebas Unitarias y de Integracion
 
-## Support
+- **Ejecutar todas las pruebas**: npm run test
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Ver cobertura del codigo**: npm run test:cov
 
-## Stay in touch
+## Estructura del proyecto
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+src/
+├── notes/
+│ ├── dto/ # Data Transfer Objects (Validaciones)
+│ ├── interfaces/ # Contratos de Repositorio
+│ ├── notes.controller.ts # Manejo de peticiones HTTP
+│ ├── notes.service.ts # Lógica de Negocio (Ordenamiento/Filtros)
+│ ├── file-notes.repository.ts # Implementación de persistencia (JSON)
+│ └── ...
+├── app.module.ts # Módulo principal
+└── main.ts # Punto de entrada
 
-## License
+## AUTORES
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**David Crespo y Kelly Apolinar**
+
+Proyecto de Tópicos Especiales de Programacion.
+
+UCAB

@@ -17,13 +17,13 @@ export class NotesService {
   /**
    * Obtiene las notas aplicando las reglas de negocio:
    * 1. Ordenamiento (Título, Creación, Modificación).
-   * 2. Proyección (Ocultar el contenido).
+   * 2. Ocultar el contenido.
    */
   async findAll(sort?: string) {
     // 1. Traemos todas las notas del repositorio
     const notes = await this.notesRepository.findAll();
 
-    // 2. Aplicamos lógica de ORDENAMIENTO si el usuario lo pidió
+    // 2. Aplicamos lógica de ORDENAMIENTO 
     if (sort) {
       if (sort === 'title') {
         notes.sort((a, b) => a.title.localeCompare(b.title));
@@ -34,7 +34,7 @@ export class NotesService {
       }
     }
 
-    // 3. Aplicamos lógica de NEGOCIO: Ocultar el campo 'content' en el listado
+    // 3. Aplicamos lógica de ocultar el campo 'content' en el listado
     return notes.map((note) => {
       // Usamos desestructuración para separar el contenido del resto
       const { content, ...noteWithoutContent } = note as any;
