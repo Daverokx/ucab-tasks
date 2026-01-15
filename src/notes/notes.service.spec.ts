@@ -6,7 +6,20 @@ describe('NotesService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [NotesService],
+      providers: [
+        NotesService,
+        {
+          // Simulamos (Mock) el repositorio para que el test no falle
+          provide: 'NOTES_REPOSITORY',
+          useValue: {
+            findAll: jest.fn(),
+            findById: jest.fn(),
+            create: jest.fn(),
+            update: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<NotesService>(NotesService);
